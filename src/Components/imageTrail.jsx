@@ -4,26 +4,44 @@ import trailimg2 from "../assets/trailimg2.png"
 import trailimg3 from "../assets/trailimg3.png"
 import trailimg4 from "../assets/trailimg4.png"
 import trailimg5 from "../assets/trailimg5.png"
-const exampleImages = [
-    { url: trailimg1 },
-    { url: trailimg2 },
-    { url: trailimg3 },
-    { url: trailimg4 },
-    { url: trailimg5 },
-];
+import trailimgdark1 from "../assets/trailimgdark1.png"
+import trailimgdark2 from "../assets/trailimgdark2.png"
+import trailimgdark3 from "../assets/trailimgdark3.png"
+import trailimgdark4 from "../assets/trailimgdark4.png"
+import trailimgdark5 from "../assets/trailimgdark5.png"
 import ImageTrail from "../fancy/components/image/image-trail"
 import { MoveRight } from "lucide-react";
 import  {ShineBorder} from "./magicui/shine-border"
 import Toggle from "./toggle"
+import { useTheme } from "../context/themeProvider"
 
 const ImageTrailDemo = () => {
   const ref = useRef(null)
+    const { theme } = useTheme();
+    const exampleImages = [
+        { url: trailimg1 },
+        { url: trailimg2 },
+        { url: trailimg3 },
+        { url: trailimg4 },
+        { url: trailimg5 },
+    ];
+    const exampleImagesDark = [
+        { url: trailimgdark1 },
+        { url: trailimgdark2 },
+        { url: trailimgdark3 },
+        { url: trailimgdark4 },
+        { url: trailimgdark5 },
+    ];
+    const isDarkMode = theme === "dark";
+    const exampleImagesToUse = isDarkMode ? exampleImagesDark : exampleImages;
+    
+
 
 return (
     <div className="flex w-dvw h-dvh justify-center items-center bg-white text-foreground dark:text-foreground dark:bg-background">
         <div className="absolute top-0 left-0 z-0" ref={ref}>
             <ImageTrail containerRef={ref} className="dark">
-                {exampleImages.map((image, index) => (
+                {exampleImagesToUse.map((image, index) => (
                     <div
                         key={index}
                         className="flex relative overflow-hidden w-24 h-24 "
