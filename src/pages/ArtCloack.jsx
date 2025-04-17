@@ -1,92 +1,91 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
 
-function ArtCloack() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [originalSimilarity, setOriginalSimilarity] = useState(null);
-  const [perturbedSimilarity, setPerturbedSimilarity] = useState(null);
-  const [cloakedImageUrl, setCloakedImageUrl] = useState(null);
+const FaceCloak = () => {
+  const [preview, setPreview] = useState(null);
+  const [responseImage, setResponseImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [similarityScore, setSimilarityScore] = useState(null);
 
-  // Handle file input
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  // Submit image to Flask backend
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!selectedFile) {
-      alert("Please select an image first.");
-      return;
-    }
+  const onDrop = useCallback(async (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    setPreview(URL.createObjectURL(file));
+    setLoading(true);
 
     const formData = new FormData();
-    formData.append("image", selectedFile);
-
-    setLoading(true);
-    setError(null);
+    formData.append("image", file);
 
     try {
-      console.log("Sending request to backend...");
-      const response = await axios.post(
-        "http://127.0.0.1:8080/cloak",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
+      const res = await axios.post("http://127.0.0.1:8080/cloak", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       const {
         original_cosine_similarity,
         perturbed_cosine_similarity,
         cloaked_image_url,
-      } = response.data;
-      setOriginalSimilarity(original_cosine_similarity);
-      setPerturbedSimilarity(perturbed_cosine_similarity);
-      setCloakedImageUrl(cloaked_image_url);
+      } = res.data;
+      console.log(res.data);
+      console.log(perturbed_cosine_similarity);
+      setResponseImage(cloaked_image_url);
+      setSimilarityScore(perturbed_cosine_similarity);
     } catch (err) {
-      setError("Error processing the image. Please try again.");
+      console.error("Upload failed:", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className="App">
-      <h1>Mirage-AI: Image Cloaking</h1>
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6">
+      <h1 className="text-3xl font-semibold mb-4">Face Cloak – Drag & Drop</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <button type="submit" disabled={loading}>
-          {loading ? "Processing..." : "Upload Image"}
-        </button>
-      </form>
+      <div
+        {...getRootProps()}
+        className={`w-96 h-48 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer mb-4 ${
+          isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-400"
+        }`}
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the image here ...</p>
+        ) : (
+          <p>Drag & drop an image here, or click to select</p>
+        )}
+      </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {originalSimilarity !== null && (
-        <div>
-          <h2>Cosine Similarity Scores</h2>
-          <p>
-            <strong>Original Image:</strong> {originalSimilarity}
-          </p>
-          <p>
-            <strong>Perturbed Image:</strong> {perturbedSimilarity}
-          </p>
+      {preview && (
+        <div className="flex flex-col items-center mb-4">
+          <p className="mb-2 font-medium">Original Image</p>
+          <img
+            src={preview}
+            alt="Preview"
+            className="w-64 rounded-md shadow-md"
+          />
         </div>
       )}
 
-      {cloakedImageUrl && (
-        <div>
-          <img src={cloakedImageUrl} alt="Cloaked" />
+      {loading && <p>Processing...</p>}
+      {similarityScore && (
+        <p className="mt-2 text-sm text-gray-500">
+          Similarity Score: {similarityScore.toFixed(4)}
+        </p>
+      )}
+
+      {responseImage && (
+        <div className="flex flex-col items-center mt-6">
+          <p className="mb-2 font-medium">Cloaked Image</p>
+          <img
+            src={responseImage}
+            alt="Cloaked"
+            className="w-64 rounded-md shadow-lg"
+          />
         </div>
       )}
     </div>
   );
-}
+};
 
-export default ArtCloack;
+export default FaceCloak;

@@ -19,6 +19,7 @@ clip_model, preprocess_clip = clip.load("ViT-B/32", device=device)
 normalize_clip = T.Normalize(mean=(0.4815, 0.4578, 0.4082), std=(0.2686, 0.2613, 0.2758))
 
 def generate_cloak(image_pil, epsilon=0.003):
+    original_image_size = image_pil.size    
     transform = T.Compose([
         T.Resize((224, 224)),
         T.ToTensor(),
@@ -53,6 +54,7 @@ def generate_cloak(image_pil, epsilon=0.003):
 
     # Convert to PIL
     output_img = T.ToPILImage()(perturbed.squeeze().detach().cpu())
+    output_img = output_img.resize(original_image_size, Image.LANCZOS)
 
     return output_img, original_similarity, perturbed_similarity
 
