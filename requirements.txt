@@ -1,0 +1,8 @@
+torch
+torchvision
+timm
+facenet_pytorch
+matplotlib  
+flask
+flask_cors
+scikit-learn

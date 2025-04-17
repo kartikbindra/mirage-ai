@@ -9,6 +9,9 @@ from model import EmbeddingPoisoner
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 # Load FaceNet
 facenet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
@@ -18,7 +21,7 @@ transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_path = "art.jpg"
+image_path = "image.png"
 if not os.path.exists(image_path):
     raise FileNotFoundError(f"Couldn't find {image_path}. Please add a test image.")
 

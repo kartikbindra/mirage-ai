@@ -1,16 +1,17 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './Components/navbar.jsx';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./Components/navbar.jsx";
 // import Home from './pages/Home.jsx';
 // import About from './pages/About.jsx';
 // import Contact from './pages/Contact.jsx';
-import { ThemeProvider } from './context/themeProvider.jsx';
-import Landing from './pages/Landing.jsx';
-import Signup from './pages/Signup.jsx';
-import Login from './pages/Login.jsx';
-import SidebarLayout from './Components/SidebarLayout.jsx';
-import Home from './pages/Home.jsx';
-
+import { ThemeProvider } from "./context/themeProvider.jsx";
+import Landing from "./pages/Landing.jsx";
+import Signup from "./pages/Signup.jsx";
+import Login from "./pages/Login.jsx";
+import SidebarLayout from "./Components/SidebarLayout.jsx";
+import Home from "./pages/Home.jsx";
+import ArtCloack from "./pages/ArtCloack.jsx";
+import FaceCloak from "./pages/FaceCloak.jsx";
 function App() {
   return (
     <ThemeProvider>
@@ -26,6 +27,8 @@ function App() {
             {/* homepage and other pages with a sidebar */}
             <Route element={<SidebarLayout />}>
               <Route path="/home" element={<Home />} />
+              <Route path="/artcloak" element={<ArtCloack />} />
+              <Route path="/facecloak" element={<FaceCloak />} />
             </Route>
           </Routes>
         </div>
