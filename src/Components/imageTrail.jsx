@@ -14,6 +14,7 @@ import { MoveRight } from "lucide-react";
 import  {ShineBorder} from "./magicui/shine-border"
 import Toggle from "./toggle"
 import { useTheme } from "../context/themeProvider"
+import { Link } from "react-router-dom"
 
 const ImageTrailDemo = () => {
   const ref = useRef(null)
@@ -59,7 +60,7 @@ return (
             <Toggle/>
             <h1 className="text-6xl z-10 text-center font-[Instrument_Serif] mix-blend-difference">“What if <span className="italic">your</span> content wasn’t <br/> <span className="italic">theirs</span> to understand?”</h1>
             <h1 className="text-lg z-10 text-center mt-6 font-[Overused_Grotesk] mix-blend-difference dark:text-foreground/50">Don’t let your pixels power their models. <br/> Protect your content. Stay ahead of the AI game.</h1>
-            <button className="flex gap-2 items-center dark text-md z-10 text-center mt-6 font-[Overused_Grotesk] bg-background text-white py-2 px-4 rounded-[8px] mix-blend-difference dark:bg-foreground dark:text-background">Get Started <MoveRight className="w-1/6 h-1/6"/></button>
+            <Link className="flex gap-2 items-center dark text-md z-10 text-center mt-6 font-[Overused_Grotesk] bg-background text-white py-2 px-4 rounded-[8px] mix-blend-difference dark:bg-foreground dark:text-background" to={'/login'}>Get Started <MoveRight className="w-1/6 h-1/6"/></Link>
         </div>
     </div>
 )
